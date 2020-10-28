@@ -7,12 +7,12 @@ namespace XUnitTestProject1
     public class UnitTest1
     {
         static readonly string workingDirectory = Environment.CurrentDirectory;
-        private readonly string testsDirFullPath = Directory.GetParent(workingDirectory).Parent.Parent.FullName + "\\tests-dir";
+        private readonly string testsDirFullPath = Directory.GetParent(workingDirectory).Parent.Parent.FullName + "\\dir-for-tests";
 
         [Fact]
         public void TestGetFileName()
         {
-            string fileNameExpected = "TestFileName.txt";
+            string fileNameExpected = "TestFile.txt";
             string fileFullPath = testsDirFullPath + "\\" + fileNameExpected;
             string fileNameReal =  IIG.FileWorker.BaseFileWorker.GetFileName(fileFullPath);
           
@@ -21,7 +21,7 @@ namespace XUnitTestProject1
         [Fact]
         public void TestGetFullPath()
         {
-            string fullPathExpected = testsDirFullPath+ "\\TestFileName.txt";
+            string fullPathExpected = testsDirFullPath+ "\\TestFile.txt";
             string localPath = new Uri(fullPathExpected).LocalPath;
             string fullPathReal = IIG.FileWorker.BaseFileWorker.GetFullPath(localPath);
             Assert.Equal(fullPathExpected, fullPathReal);
@@ -29,7 +29,7 @@ namespace XUnitTestProject1
         [Fact]
         public void TestGetPath()
         {
-            string fullFilePathExpected = testsDirFullPath+ "\\TestFileName.txt";
+            string fullFilePathExpected = testsDirFullPath+ "\\TestFile.txt";
             string filePathExpected = testsDirFullPath;
             string fullPathReal = IIG.FileWorker.BaseFileWorker.GetPath(fullFilePathExpected);
             Assert.Equal(filePathExpected, fullPathReal);
@@ -44,16 +44,16 @@ namespace XUnitTestProject1
         [Fact]
         public void TestReadAll()
         {
-            string fullPathExpected = testsDirFullPath+ "\\TestFileName.txt";
-            string contentExpected = "line1\r\nline2";
+            string fullPathExpected = testsDirFullPath+ "\\TestFile.txt";
+            string contentExpected = "1\r\n2";
             string contentReal = IIG.FileWorker.BaseFileWorker.ReadAll(fullPathExpected);
             Assert.Equal(contentExpected, contentReal);
         }
         [Fact]
         public void TestReadLines()
         {
-            string fileFullPath = testsDirFullPath+ "\\TestFileName.txt";
-            string[] linesExpected = { "line1", "line2" };
+            string fileFullPath = testsDirFullPath+ "\\TestFile.txt";
+            string[] linesExpected = { "1", "2" };
             string[] lines = IIG.FileWorker.BaseFileWorker.ReadLines(fileFullPath);
             Assert.Equal(linesExpected, lines);
         }
@@ -61,31 +61,24 @@ namespace XUnitTestProject1
         [Fact]
         public void TestTryCopyRewriteAllow()
         {
-            string fileFromFullPath = testsDirFullPath + "\\TestFileName.txt";
-            string fileToFullPath = testsDirFullPath + "\\TestFileNameCopied.txt";
+            string fileFromFullPath = testsDirFullPath + "\\TestFile.txt";
+            string fileToFullPath = testsDirFullPath + "\\TestFileCopied.txt";
             bool copied = IIG.FileWorker.BaseFileWorker.TryCopy(fileFromFullPath, fileToFullPath, true);
             Assert.True(copied, "Not copied");
         }
         [Fact]
         public void TestTryCopyRewriteNotAllow()
         {
-            string fileFromFullPath = testsDirFullPath + "\\TestFileName.txt";
-            string fileToFullPath = testsDirFullPath + "\\TestFileNameCopied.txt";
-            try
-            {
-                bool copied = IIG.FileWorker.BaseFileWorker.TryCopy(fileFromFullPath, fileToFullPath, false);
-            }
-            catch (IOException e)
-            {
-                bool alreadyExist = e.Message.Contains("already exists");
-                Assert.True(alreadyExist);
-            }
+            string fileFromFullPath = testsDirFullPath + "\\TestFile.txt";
+            string fileToFullPath = testsDirFullPath + "\\TestFileCopied.txt";
+            bool copied = IIG.FileWorker.BaseFileWorker.TryCopy(fileFromFullPath, fileToFullPath, false);
+            Assert.False(copied);
         }
         [Fact]
         public void TestTryWrite()
         {
             string fileWrittenFullPath = testsDirFullPath + "\\TestFileTryWritten.txt";
-            string data = "some data provided";
+            string data = "some data here";
             bool written = IIG.FileWorker.BaseFileWorker.TryWrite(data, fileWrittenFullPath);
             Assert.True(written, "Not written");
         }
@@ -93,7 +86,7 @@ namespace XUnitTestProject1
         public void TestWrite()
         {
             string fileWrittenFullPath = testsDirFullPath + "\\TestFileWritten.txt";
-            string data = "some data provided";
+            string data = "some data here";
             bool written = IIG.FileWorker.BaseFileWorker.Write(data, fileWrittenFullPath);
             Assert.True(written, "Not written");
         }
